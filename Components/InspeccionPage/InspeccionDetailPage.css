@@ -1,0 +1,49 @@
+.inspeccion-detail-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.inspeccion-detail-card {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+}
+
+.detail-title {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.detail-item {
+  margin: 0.8rem 0;
+}
+
+.status-aprobado {
+  color: green;
+  font-weight: bold;
+}
+
+.status-rechazado {
+  color: red;
+  font-weight: bold;
+}
+
+.status-pendiente {
+  color: orange;
+  font-weight: bold;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.edit-button {
+  margin-right: 1rem;
+}
