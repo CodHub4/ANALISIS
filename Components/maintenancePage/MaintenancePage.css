@@ -1,0 +1,187 @@
+/* MaintenancePage.css */
+.maintenance-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.detail-card {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.error-message {
+  color: #d32f2f;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: #fdecea;
+  border-radius: 4px;
+}
+
+.page-title {
+  margin-bottom: 2rem;
+  color: #333;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Tabla y elementos específicos de mantenimiento */
+.maintenance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.maintenance-table th {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+.maintenance-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.maintenance-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Badges de estado */
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-badge.completado {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge.pendiente {
+  background-color: #fff8e1;
+  color: #ff8f00;
+}
+
+.status-badge.cancelado {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+/* Botones */
+.action-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.view-button {
+  background-color: #1976d2;
+  color: white;
+}
+
+.edit-button {
+  background-color: #ffa000;
+  color: white;
+}
+
+.delete-button {
+  background-color: #d32f2f;
+  color: white;
+}
+
+/* Controles */
+.controls-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.search-input {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  min-width: 250px;
+}
+
+/* Estadísticas */
+.stats-container {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.chart-container {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mensajes */
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #757575;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .controls-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  .action-button {
+    margin-bottom: 0.5rem;
+  }
+  
+  .maintenance-table {
+    font-size: 0.875rem;
+  }
+  
+  .maintenance-table th,
+  .maintenance-table td {
+    padding: 0.75rem;
+  }
+}
