@@ -110,7 +110,6 @@ function MaintenancePage() {
         doc.text(`Filtro aplicado: "${searchQuery}"`, 50, 28);
       }
 
-      // Agregar resumen estadístico al PDF
       doc.setFontSize(12);
       doc.text('Resumen Estadístico:', 14, 45);
       doc.text(`- Total mantenimientos: ${filteredMaintenances.length}`, 20, 55);
@@ -125,7 +124,7 @@ function MaintenancePage() {
         new Date(maintenance.MAN_FECHA_MANTENIMIENTO).toLocaleDateString(),
         maintenance.MAN_TIPO_MANTENIMIENTO,
         maintenance.MAN_ESTADO,
-        maintenance.MAN_COSTO_TOTAL ? `$${parseFloat(maintenance.MAN_COSTO_TOTAL).toFixed(2)}` : 'N/A'
+        maintenance.MAN_COSTO_TOTAL ? `Q${parseFloat(maintenance.MAN_COSTO_TOTAL).toFixed(2)}` : 'N/A'
       ]);
 
       autoTable(doc, {
@@ -136,7 +135,7 @@ function MaintenancePage() {
           const pageHeight = doc.internal.pageSize.height;
           doc.setFontSize(10);
           doc.text(`Página ${doc.internal.getCurrentPageInfo().pageNumber}`, data.settings.margin.left, pageHeight - 10);
-          doc.text(`Generado el ${new Date().toLocaleString()}`, doc.internal.pageSize.width - 60, pageHeight - 10);
+          doc.text(`Generado el {new Date().toLocaleString()}`, doc.internal.pageSize.width - 60, pageHeight - 10);
         }
       });
 
@@ -163,7 +162,6 @@ function MaintenancePage() {
       'Costo': maintenance.MAN_COSTO_TOTAL ? parseFloat(maintenance.MAN_COSTO_TOTAL) : 'N/A'
     })));
 
-    // Agregar hoja con estadísticas
     const statsWorksheet = XLSX.utils.json_to_sheet([
       { 'Métrica': 'Total mantenimientos', 'Valor': filteredMaintenances.length },
       { 'Métrica': 'Completados', 'Valor': estadoData.completado, 'Porcentaje': `${(estadoData.completado/filteredMaintenances.length*100).toFixed(1)}%` },
@@ -214,11 +212,11 @@ function MaintenancePage() {
 
   return (
     <div className="users-container">
-      {/* Barra de navegación */}
       <div className="navbar">
         <div className="logo"><h2>Aplicación</h2></div>
         <div className="nav-links">
           <Link to="/" className="nav-link">Inicio</Link>
+         
           <Link to="/mantenimientos" className="nav-link">Mantenimientos</Link>
           <Link to="/nuevo-mantenimiento" className="nav-link">Nuevo Mantenimiento</Link>
           <Link to="/contacto" className="nav-link">Contacto</Link>
@@ -233,7 +231,6 @@ function MaintenancePage() {
         </div>
       </div>
 
-      {/* Snackbar para alertas */}
       <Snackbar
         open={openAlert}
         autoHideDuration={6000}
@@ -245,7 +242,6 @@ function MaintenancePage() {
         </Alert>
       </Snackbar>
 
-      {/* Diálogo de estadísticas detalladas */}
       <Dialog open={openStatsDialog} onClose={handleCloseStatsDialog}>
         <DialogTitle>Estadísticas Detalladas</DialogTitle>
         <DialogContent>
@@ -285,7 +281,6 @@ function MaintenancePage() {
         Lista de Mantenimientos
       </Typography>
 
-      {/* Botones de reporte y estadísticas */}
       <div className="report-buttons" style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
         <Button variant="contained" color="primary" onClick={generatePDF}>
           Generar PDF
@@ -298,7 +293,6 @@ function MaintenancePage() {
         </Button>
       </div>
 
-      {/* Tabla de mantenimientos */}
       <div className="table-container">
         {filteredMaintenances.length > 0 ? (
           <table className="users-table">
@@ -325,15 +319,52 @@ function MaintenancePage() {
                       {maintenance.MAN_ESTADO}
                     </span>
                   </td>
-                  <td>{maintenance.MAN_COSTO_TOTAL ? `$${parseFloat(maintenance.MAN_COSTO_TOTAL).toFixed(2)}` : 'N/A'}</td>
+                  <td>{maintenance.MAN_COSTO_TOTAL ? `Q${parseFloat(maintenance.MAN_COSTO_TOTAL).toFixed(2)}` : 'N/A'}</td>
                   <td className="actions">
-                    <Link to={`/mantenimiento/${maintenance.MAN_MANTENIMIENTO_ID}`}>
-                      <Button variant="contained" color="primary">Ver Detalles</Button>
+                    <Link to={`/mantenimientos/${maintenance.MAN_MANTENIMIENTO_ID}`}>
+                      <Button 
+                        variant="contained" 
+                        color="primary"
+                        style={{ 
+                          backgroundColor: '#1976d2', 
+                          color: 'white',
+                          padding: '8px 16px',
+                          fontSize: '0.875rem',
+                          textTransform: 'none',
+                          marginRight: '8px'
+                        }}
+                      >
+                        Ver Detalles
+                      </Button>
                     </Link>
                     <Link to={`/editar-mantenimiento/${maintenance.MAN_MANTENIMIENTO_ID}`}>
-                      <Button variant="contained" color="secondary">Editar</Button>
+                      <Button 
+                        variant="contained" 
+                        color="secondary"
+                        style={{ 
+                          backgroundColor: '#9c27b0', 
+                          color: 'white',
+                          padding: '8px 16px',
+                          fontSize: '0.875rem',
+                          textTransform: 'none',
+                          marginRight: '8px'
+                        }}
+                      >
+                        Editar
+                      </Button>
                     </Link>
-                    <Button variant="contained" color="error" onClick={() => handleDelete(maintenance.MAN_MANTENIMIENTO_ID)}>
+                    <Button 
+                      variant="contained" 
+                      color="error"
+                      style={{ 
+                        backgroundColor: '#d32f2f', 
+                        color: 'white',
+                        padding: '8px 16px',
+                        fontSize: '0.875rem',
+                        textTransform: 'none'
+                      }}
+                      onClick={() => handleDelete(maintenance.MAN_MANTENIMIENTO_ID)}
+                    >
                       Eliminar
                     </Button>
                   </td>
@@ -346,7 +377,6 @@ function MaintenancePage() {
         )}
       </div>
 
-      {/* Sección de gráficos */}
       <div className="chart-container" style={{
         marginTop: '40px',
         display: 'flex',

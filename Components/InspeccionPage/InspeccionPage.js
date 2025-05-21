@@ -24,7 +24,6 @@ function InspeccionPage() {
     axios.get('http://localhost:3001/inspecciones-tecnicas')
       .then(response => {
         setInspecciones(response.data);
-        // Mostrar alerta con estadísticas iniciales
         showInitialStats(response.data);
       })
       .catch(error => {
@@ -63,34 +62,44 @@ function InspeccionPage() {
     if (inspeccion.INS_ESTADO === 'Aprobado') acc.aprobado++;
     if (inspeccion.INS_ESTADO === 'Rechazado') acc.rechazado++;
     if (inspeccion.INS_ESTADO === 'Pendiente') acc.pendiente++;
+    if (inspeccion.INS_ESTADO === 'En Proceso') acc.enProceso++;
     return acc;
-  }, { aprobado: 0, rechazado: 0, pendiente: 0 });
+  }, { aprobado: 0, rechazado: 0, pendiente: 0, enProceso: 0 });
 
-  // Estadísticas por tipo de inspección
+  // Estadísticas por tipo de inspección (actualizado para tus datos reales)
   const tipoData = filteredInspecciones.reduce((acc, inspeccion) => {
-    if (inspeccion.INS_TIPO_INSPECCION === 'Rutinaria') acc.rutinaria++;
-    if (inspeccion.INS_TIPO_INSPECCION === 'Extraordinaria') acc.extraordinaria++;
-    if (inspeccion.INS_TIPO_INSPECCION === 'Especial') acc.especial++;
+    const tipo = inspeccion.INS_TIPO_INSPECCION;
+    if (tipo === 'Extraordinaria') acc.extraordinaria++;
+    else if (tipo === 'Inicial') acc.inicial++;
+    else if (tipo === 'Periódica') acc.periodica++;
+    else if (tipo === 'Inspección de seguridad') acc.seguridad++;
+    else acc.otros++;
     return acc;
-  }, { rutinaria: 0, extraordinaria: 0, especial: 0 });
+  }, { extraordinaria: 0, inicial: 0, periodica: 0, seguridad: 0, otros: 0 });
 
   // Datos para gráficos
   const estadoChartData = {
-    labels: ['Aprobado', 'Rechazado', 'Pendiente'],
+    labels: ['Aprobado', 'Rechazado', 'Pendiente', 'En Proceso'],
     datasets: [{
       label: 'Estado de Inspecciones',
-      data: [estadoData.aprobado, estadoData.rechazado, estadoData.pendiente],
-      backgroundColor: ['#4CAF50', '#F44336', '#FFC107'],
+      data: [estadoData.aprobado, estadoData.rechazado, estadoData.pendiente, estadoData.enProceso],
+      backgroundColor: ['#4CAF50', '#F44336', '#FFC107', '#2196F3'],
       hoverOffset: 4
     }]
   };
 
   const tipoChartData = {
-    labels: ['Rutinaria', 'Extraordinaria', 'Especial'],
+    labels: ['Extraordinaria', 'Inicial', 'Periódica', 'Seguridad', 'Otros'],
     datasets: [{
       label: 'Tipo de Inspección',
-      data: [tipoData.rutinaria, tipoData.extraordinaria, tipoData.especial],
-      backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+      data: [
+        tipoData.extraordinaria, 
+        tipoData.inicial, 
+        tipoData.periodica, 
+        tipoData.seguridad,
+        tipoData.otros
+      ],
+      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#9C27B0'],
       hoverOffset: 4
     }]
   };
@@ -111,13 +120,13 @@ function InspeccionPage() {
         doc.text(`Filtro aplicado: "${searchQuery}"`, 50, 28);
       }
 
-      // Agregar resumen estadístico al PDF
       doc.setFontSize(12);
       doc.text('Resumen Estadístico:', 14, 45);
       doc.text(`- Total inspecciones: ${filteredInspecciones.length}`, 20, 55);
       doc.text(`- Aprobadas: ${estadoData.aprobado} (${(estadoData.aprobado/filteredInspecciones.length*100).toFixed(1)}%)`, 20, 65);
       doc.text(`- Rechazadas: ${estadoData.rechazado} (${(estadoData.rechazado/filteredInspecciones.length*100).toFixed(1)}%)`, 20, 75);
       doc.text(`- Pendientes: ${estadoData.pendiente} (${(estadoData.pendiente/filteredInspecciones.length*100).toFixed(1)}%)`, 20, 85);
+      doc.text(`- En Proceso: ${estadoData.enProceso} (${(estadoData.enProceso/filteredInspecciones.length*100).toFixed(1)}%)`, 20, 95);
 
       const tableColumn = ['ID', 'Vehículo ID', 'Fecha', 'Tipo', 'Estado'];
       const tableRows = filteredInspecciones.map(inspeccion => [
@@ -131,7 +140,7 @@ function InspeccionPage() {
       autoTable(doc, {
         head: [tableColumn],
         body: tableRows,
-        startY: 100,
+        startY: 110,
         didDrawPage: (data) => {
           const pageHeight = doc.internal.pageSize.height;
           doc.setFontSize(10);
@@ -162,12 +171,12 @@ function InspeccionPage() {
       'Estado': inspeccion.INS_ESTADO
     })));
 
-    // Agregar hoja con estadísticas
     const statsWorksheet = XLSX.utils.json_to_sheet([
       { 'Métrica': 'Total inspecciones', 'Valor': filteredInspecciones.length },
       { 'Métrica': 'Aprobadas', 'Valor': estadoData.aprobado, 'Porcentaje': `${(estadoData.aprobado/filteredInspecciones.length*100).toFixed(1)}%` },
       { 'Métrica': 'Rechazadas', 'Valor': estadoData.rechazado, 'Porcentaje': `${(estadoData.rechazado/filteredInspecciones.length*100).toFixed(1)}%` },
-      { 'Métrica': 'Pendientes', 'Valor': estadoData.pendiente, 'Porcentaje': `${(estadoData.pendiente/filteredInspecciones.length*100).toFixed(1)}%` }
+      { 'Métrica': 'Pendientes', 'Valor': estadoData.pendiente, 'Porcentaje': `${(estadoData.pendiente/filteredInspecciones.length*100).toFixed(1)}%` },
+      { 'Métrica': 'En Proceso', 'Valor': estadoData.enProceso, 'Porcentaje': `${(estadoData.enProceso/filteredInspecciones.length*100).toFixed(1)}%` }
     ]);
 
     const workbook = XLSX.utils.book_new();
@@ -213,12 +222,11 @@ function InspeccionPage() {
 
   return (
     <div className="users-container">
-      {/* Barra de navegación */}
       <div className="navbar">
         <div className="logo"><h2>Aplicación</h2></div>
         <div className="nav-links">
           <Link to="/" className="nav-link">Inicio</Link>
-          <Link to="/inspecciones" className="nav-link">Inspecciones</Link>
+          <Link to="/inspecciones-tecnicas" className="nav-link">Inspecciones</Link>
           <Link to="/nueva-inspeccion" className="nav-link">Nueva Inspección</Link>
           <Link to="/contacto" className="nav-link">Contacto</Link>
         </div>
@@ -232,7 +240,6 @@ function InspeccionPage() {
         </div>
       </div>
 
-      {/* Snackbar para alertas */}
       <Snackbar
         open={openAlert}
         autoHideDuration={6000}
@@ -244,7 +251,6 @@ function InspeccionPage() {
         </Alert>
       </Snackbar>
 
-      {/* Diálogo de estadísticas detalladas */}
       <Dialog open={openStatsDialog} onClose={handleCloseStatsDialog}>
         <DialogTitle>Estadísticas Detalladas</DialogTitle>
         <DialogContent>
@@ -263,16 +269,25 @@ function InspeccionPage() {
           <Typography>
             Pendientes: <strong>{estadoData.pendiente}</strong> ({filteredInspecciones.length > 0 ? (estadoData.pendiente/filteredInspecciones.length*100).toFixed(1) : 0}%)
           </Typography>
+          <Typography>
+            En Proceso: <strong>{estadoData.enProceso}</strong> ({filteredInspecciones.length > 0 ? (estadoData.enProceso/filteredInspecciones.length*100).toFixed(1) : 0}%)
+          </Typography>
           
           <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>Por Tipo</Typography>
-          <Typography>
-            Rutinarias: <strong>{tipoData.rutinaria}</strong>
-          </Typography>
           <Typography>
             Extraordinarias: <strong>{tipoData.extraordinaria}</strong>
           </Typography>
           <Typography>
-            Especiales: <strong>{tipoData.especial}</strong>
+            Iniciales: <strong>{tipoData.inicial}</strong>
+          </Typography>
+          <Typography>
+            Periódicas: <strong>{tipoData.periodica}</strong>
+          </Typography>
+          <Typography>
+            Seguridad: <strong>{tipoData.seguridad}</strong>
+          </Typography>
+          <Typography>
+            Otros: <strong>{tipoData.otros}</strong>
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -284,7 +299,6 @@ function InspeccionPage() {
         Lista de Inspecciones Técnicas
       </Typography>
 
-      {/* Botones de reporte y estadísticas */}
       <div className="report-buttons" style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
         <Button variant="contained" color="primary" onClick={generatePDF}>
           Generar PDF
@@ -297,7 +311,6 @@ function InspeccionPage() {
         </Button>
       </div>
 
-      {/* Tabla de inspecciones */}
       <div className="table-container">
         {filteredInspecciones.length > 0 ? (
           <table className="users-table">
@@ -319,7 +332,7 @@ function InspeccionPage() {
                   <td>{new Date(inspeccion.INS_FECHA_INSPECCION).toLocaleDateString()}</td>
                   <td>{inspeccion.INS_TIPO_INSPECCION}</td>
                   <td>
-                    <span className={`status-badge ${inspeccion.INS_ESTADO.toLowerCase()}`}>
+                    <span className={`status-badge ${inspeccion.INS_ESTADO.toLowerCase().replace(' ', '-')}`}>
                       {inspeccion.INS_ESTADO}
                     </span>
                   </td>
@@ -343,7 +356,6 @@ function InspeccionPage() {
         )}
       </div>
 
-      {/* Sección de gráficos */}
       <div className="chart-container" style={{
         marginTop: '40px',
         display: 'flex',

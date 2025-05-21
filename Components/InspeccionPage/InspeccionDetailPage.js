@@ -70,7 +70,7 @@ function InspeccionDetailPage() {
         <Button 
           variant="outlined" 
           color="primary" 
-          onClick={() => navigate('/inspecciones')}
+          onClick={() => navigate('/inspecciones-tecnicas')}
           className="back-button"
         >
           Volver al listado
