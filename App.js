@@ -12,11 +12,13 @@ import EditUserPage from './components/UsersPage/EditUserPage';
 import UserDetailPage from './components/UsersPage/UserDetailPage';
 
 
+
 //FERNANDO
 import ConductorsPage from './components/conductorsPage/ConductorsPage';
 import CreateConductorPage from './components/conductorsPage/CreateConductorPage';
 import EditConductorPage from './components/conductorsPage/EditConductorPage';
 import ConductorDetailPage from './components/conductorsPage/ConductorDetailPage';
+
 
 
 //DANIEL
@@ -79,6 +81,7 @@ function App() {
 
 		  {/* Rutas para el módulo de asignaciones ERNESTO*/}
 
+  
 		  {/* Rutas para el módulo de historialViaje ERNESTO*/}
 
 	 
@@ -91,3 +94,5 @@ function App() {
 }
 
 export default App;
+
+//hola
